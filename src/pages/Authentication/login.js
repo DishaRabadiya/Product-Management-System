@@ -3,13 +3,15 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Card, Col, Form, Input, Label, Row } from "reactstrap";
-import axios from "axios";
+// import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
+  const userData = JSON.parse(localStorage.getItem("RegisterdData"));
+
   const {
     control,
     register,
@@ -18,17 +20,37 @@ function Login() {
   } = useForm();
 
   const handleLoginFunction = (data) => {
-    axios.post("http://localhost:4005/userlogin", data).then((response) => {
-      if (response?.data?.status === 1) {
-        toast.success(response?.data?.description);
-        localStorage.setItem("UserData", JSON.stringify(response?.data?.data));
-        setTimeout(() => {
-          navigate("/product");
-        }, 500);
-      } else {
-        toast.error(response?.data?.description);
-      }
-    });
+    // axios.post("http://localhost:4005/userlogin", data).then((response) => {
+    //   if (response?.data?.status === 1) {
+    //     toast.success(response?.data?.description);
+    //     localStorage.setItem("UserData", JSON.stringify(response?.data?.data));
+    //     setTimeout(() => {
+    //       navigate("/product");
+    //     }, 500);
+    //   } else {
+    //     toast.error(response?.data?.description);
+    //   }
+    // });
+    if (!userData || userData.length === 0) {
+      toast.error("No registered users found.");
+      return;
+    }
+
+    const matchedUser = userData.find(
+      (user) =>
+        user.email === data.email.trim() &&
+        user.password === data.password.trim()
+    );
+
+    if (matchedUser) {
+      toast.success("Login successful!");
+      localStorage.setItem("UserData", JSON.stringify(matchedUser));
+      setTimeout(() => {
+        navigate("/product");
+      }, 500);
+    } else {
+      toast.error("Invalid email or password.");
+    }
   };
 
   return (
