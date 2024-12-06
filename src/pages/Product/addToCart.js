@@ -38,8 +38,13 @@ function AddToCart() {
                   <div className="row">
                     <div className="col-sm-2 hidden-xs">
                       <img
-                        src={item.image || "http://placehold.it/100x100"} // Fallback if no image
-                        alt={item.title}
+                        style={{
+                          height: "100px",
+                          width: "100px",
+                          objectFit: "contain",
+                        }}
+                        src={item?.images[0] || "http://placehold.it/100x100"} // Fallback if no image
+                        alt={item?.title}
                         className="img-responsive"
                       />
                     </div>
