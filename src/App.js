@@ -18,6 +18,10 @@ function App() {
       <CartProvider>
         <Router>
           <Routes>
+             <Route
+                path="/"
+                element={<Navigate to={token ? "/product" : "/login"} />}
+              />
             <Route
               element={token ? <Navigate to="/product" /> : <Login />}
               path="/login"
