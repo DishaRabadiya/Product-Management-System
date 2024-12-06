@@ -3,19 +3,18 @@ import reducer from "../reducer/cartReducer";
 
 const CartContext = createContext();
 
-const cartData = JSON.parse(localStorage.getItem("cart"));
-
 const initialState = {
-  cart: [],
+  cart: JSON.parse(localStorage.getItem("cart")) || [],
   total_item: "",
   total_amount: "",
 };
+
 const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // useEffect(() => {
-  //   localStorage.setItem("cart", JSON.stringify(state.cart));
-  // }, [state.cart]);
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(state.cart));
+  }, [state.cart]);
 
   const addToCart = (productData) => {
     dispatch({ type: "ADD_TO_CART", payload: { productData } });
