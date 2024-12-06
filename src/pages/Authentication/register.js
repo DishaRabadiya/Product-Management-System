@@ -18,22 +18,45 @@ function Register() {
   } = useForm();
 
   const handleRegisterFunction = (data) => {
-    axios
-      .post("http://localhost:4005/userregistration", data)
-      .then((response) => {
-        if (response?.data?.status === 1) {
-          toast.success(response?.data?.description);
-          localStorage.setItem(
-            "UserData",
-            JSON.stringify(response?.data?.data)
-          );
-          setTimeout(() => {
-            navigate("/login");
-          }, 500);
-        } else {
-          toast.error(response?.data?.description);
-        }
-      });
+    // axios
+    //   .post("http://localhost:4005/userregistration", data)
+    //   .then((response) => {
+    //     if (response?.data?.status === 1) {
+    //       toast.success(response?.data?.description);
+    //       localStorage.setItem(
+    //         "UserData",
+    //         JSON.stringify(response?.data?.data)
+    //       );
+    //       setTimeout(() => {
+    //         navigate("/login");
+    //       }, 500);
+    //     } else {
+    //       toast.error(response?.data?.description);
+    //     }
+    //   });
+    const existingUsers =
+      JSON.parse(localStorage.getItem("RegisterdData")) || [];
+
+    // Check if email already exists
+    const isEmailExist = existingUsers?.some(
+      (user) => user?.email === data.email.trim()
+    );
+
+    if (isEmailExist) {
+      toast.error(
+        "This email is already registered."
+      );
+      return;
+    }
+
+    // Append the new user data
+    const updatedUsers = [...existingUsers, data];
+    localStorage.setItem("RegisterdData", JSON.stringify(updatedUsers));
+
+    toast.success("Registration successful!");
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
   };
 
   return (
